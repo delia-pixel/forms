@@ -1,10 +1,20 @@
+import { useState } from "react";
+
 export default function Signup() {
+
+    const [notEqual, setNonEqual] = useState(false);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const fd = new FormData(event.target);
     const acquisitionChannel = fd.getAll("acquisition");
     const data = Object.fromEntries(fd);
       data.acquisition = acquisitionChannel;
+
+      if (data.password !== data['confirm-password']) {
+          setNonEqual(true);
+          return;
+      }
 
       // To submit manually
       //  event.target.reset(); cause the target here is the form
@@ -19,13 +29,13 @@ export default function Signup() {
 
       <div className="control">
         <label htmlFor="email">Email</label>
-        <input id="email" type="email" name="email" />
+        <input id="email" type="email" name="email" required />
       </div>
 
       <div className="control-row">
         <div className="control">
           <label htmlFor="password">Password</label>
-          <input id="password" type="password" name="password" />
+          <input id="password" type="password" name="password" required minLength={8} />
         </div>
 
         <div className="control">
@@ -33,8 +43,11 @@ export default function Signup() {
           <input
             id="confirm-password"
             type="password"
-            name="confirm-password"
+                      name="confirm-password"
+                      required
+                      minLength={8}
           />
+          {notEqual && <p className="control-error">Passwords must match.</p>}
         </div>
       </div>
 
@@ -93,7 +106,7 @@ export default function Signup() {
 
       <div className="control">
         <label htmlFor="terms-and-conditions">
-          <input type="checkbox" id="terms-and-conditions" name="terms" />I
+          <input type="checkbox" id="terms-and-conditions" name="terms" required />I
           agree to the terms and conditions
         </label>
       </div>
